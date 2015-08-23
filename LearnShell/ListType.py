@@ -35,8 +35,19 @@ print("list for sort before", for_sort)
 # 如果是对象类型，则非常混乱
 # 列表中，内置函数， sort() append() insert 都是直接对对象进行修改，没有返回值。所以，直接打印 list.soft() 会返回none。
 # 而字符串的操作函数，如 upper() 是返回一个字符串（其实是包含一个全部是大写的字符串拷贝，所以未对原有字符串对象进行修改，
-# 新增了一个字符串）
-# 如果是希望得到一个排好序的拷贝，使用 sorted() 或者 reversed,
+# 新增了一个字符串）如果是希望得到一个排好序的拷贝，
+# 使用 sorted() 或者 reversed
 # 分别意思为接受一个列表作为参数并返回一个排好序的或者倒序的拷贝
-
 # list comprehension 是一个由逻辑代码组成的结构， 包含一段逻辑代码生成的值或者对象
+
+# list comperhension 列推导
+data = [x + 1 for x in range(10)]
+print("list comperhension", data)
+even_numbers = [x for x in range(10) if x % 2 == 0]
+print("list comperhenison by double", even_numbers)
+# 这种写法常用于过滤表达式 其中 x 本身就是一个表达式值
+
+# generator expression
+generator_number = (x for x in range(10000) if x % 2 == 0)
+print("generator numbers print", generator_number)
+
