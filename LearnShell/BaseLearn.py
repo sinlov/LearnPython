@@ -9,6 +9,8 @@ for j in range(10000):
 print(time_utils.default(), time_utils.microsecond() - fGt)
 fGt = time_utils.microsecond()
 for i in range(100):
-    for j in range(100):
+    for k in range(100):
         pass
 print(time_utils.default(), time_utils.microsecond() - fGt)
+
+print(time_utils.str_format())
