@@ -105,7 +105,6 @@ def e(where, message):
 
 def out_log(buf=str):
     global isprint, log_path, log_file_full_path
-    print("log_path", log_path)
     is_log_path = log_path != ''
     if not is_log_path:
         raise IOError('you must use method init_log_out() before this')
