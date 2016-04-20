@@ -23,4 +23,6 @@ mainAct = cf.get('dynamic', 'mainActivity')
 print 'mainAct: ', mainAct
 
 cf.set('dynamic', 'mainActivity', 'demo.MainActivity')
-cf.write(open('test.properties', 'w'))
+file_io = open('test.properties', 'w')
+cf.write(file_io)
+file_io.close()
