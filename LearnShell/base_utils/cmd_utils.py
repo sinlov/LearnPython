@@ -4,11 +4,11 @@ import sys
 __author__ = 'sinlov'
 
 import re
-import platform
-import subprocess
-import logging
 import os
-import file_system
+import file_system_utils
+import platform
+import logging
+import subprocess
 
 logger = logging.getLogger('cmd_tool')
 
@@ -17,12 +17,12 @@ def prepare_cmd(cmd):
     cmd = cmd.replace('\\', '/')
     cmd = re.sub('/+', '/', cmd)
     if not os.path.isabs(cmd):
-        cur_dir = file_system.get_cur_dir()
+        cur_dir = file_system_utils.get_cur_dir()
         cmd = os.path.join(cur_dir, cmd)
 
     parent_path = os.path.dirname(cmd)
     os.chdir(parent_path)
-    file_system.change_cur_dir(parent_path)
+    file_system_utils.change_cur_dir(parent_path)
     logging.info('change cur dir path to : %s' % parent_path)
 
     cmd = os.path.split(cmd)[-1]

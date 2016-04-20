@@ -11,6 +11,7 @@ logger = logging.getLogger('gw_file_system')
 
 __CUR_DIR = os.getcwd()
 
+
 def get_full_path(filename):
     filename = filename.replace('\\', '/')
     filename = re.sub('/+', '/', filename)
