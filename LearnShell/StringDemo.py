@@ -197,3 +197,7 @@ print str[::-1]  # 创造一个与原字符串顺序相反的字符串
 print str[-3:-1]  # 截取倒数第三位与倒数第一位之前的字符
 print str[-3:]  # 截取倒数第三位到结尾
 print str[:-5:-3]  # 逆序截取，具体啥意思没搞明白？
+
+# 打印boolean 类型会提示错误,无法拼接
+res = ['change Log print success at => ', 'False']
+print "".join(res)

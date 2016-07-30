@@ -1,7 +1,7 @@
 # coding=utf-8
 import os
 
-from utils import time_utils
+import time_utils
 
 __author__ = '"sinlov"'
 
