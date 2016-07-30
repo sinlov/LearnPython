@@ -35,8 +35,8 @@ class PrettyConfigParser(ConfigParser.ConfigParser):
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-
 is_open_debug = False
+
 
 def change_apk_debuggable(mamifest):
     global is_open_debug
@@ -48,13 +48,19 @@ def change_apk_debuggable(mamifest):
         logger.error('do not found application at => ' + mamifest)
         return
     debugKey = applicationNode.get(debuggableKey)
-    logger.info('this app debugKey is ' + debugKey)
+    if debugKey != None:
+        logger.info('this app debugKey is ' + debugKey)
+    else:
+        logger.warn('this app debugKey is not setting')
     if is_open_debug:
         applicationNode.set(debuggableKey, 'true')
     else:
         applicationNode.set(debuggableKey, 'false')
     rootTree.write(mamifest, 'UTF-8')
-    logger.info('change apk_debuggable success at => ' + is_open_debug + " " + mamifest)
+    if is_open_debug:
+        logger.info('change apk_debuggable success at => ' + " open " + mamifest)
+    else:
+        logger.info('change apk_debuggable success at => ' + " close " + mamifest)
 
 
 def change_log_print(sdkParams):
@@ -72,7 +78,10 @@ def change_log_print(sdkParams):
         file_io = open(sdkParams, 'w')
         dev_cf.write(file_io)
         file_io.close()
-        logger.info('change Log print success at => ' + is_open_debug + " " + sdkParams)
+        if is_open_debug:
+            logger.info('change Log print success at => ' + " open " + sdkParams)
+        else:
+            logger.info('change Log print success at => ' + " close " + sdkParams)
 
 
 def path_skip_move(path, is_open=False):
@@ -81,14 +90,19 @@ def path_skip_move(path, is_open=False):
     change_apk_debuggable(path + "/AndroidManifest.xml")
     change_log_print(path + '/assets/sdkParams.properties')
 
+
 if __name__ == '__main__':
     try:
         if cmp(sys.argv[2], "1") == 0:
             path_skip_move(sys.argv[1], True)
         else:
             path_skip_move(sys.argv[1], False)
-        print "---------------change_apk_debuggable success-----------------------"
+        if is_open_debug:
+            print "---------------change_apk_debuggable open success-----------------------"
+        else:
+            print "---------------change_apk_debuggable close success-----------------------"
         pass
     except Exception, e:
         print "---------------your path is error-----------------------"
+        logging.error(e.message, e.args)
         raise e
