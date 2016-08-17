@@ -8,10 +8,84 @@ import threading
 import time
 import struct
 from base64 import b64encode, b64decode
+from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+from SocketServer import ThreadingMixIn
 
 connection_list = {}
 g_code_length = 0
 g_header_length = 0
+
+
+class RequestHandler(BaseHTTPRequestHandler):
+    def handle_one_request(self):
+        """Handle a single HTTP request.
+
+        You normally don't need to override this method; see the class
+        __doc__ string for information on how to handle specific HTTP
+        commands such as GET and POST.
+
+        """
+        try:
+            self.raw_requestline = self.rfile.readline(65537)
+            if len(self.raw_requestline) > 65536:
+                self.requestline = ''
+                self.request_version = ''
+                self.command = ''
+                self.send_error(414)
+                return
+            if not self.raw_requestline:
+                self.close_connection = 1
+                return
+            if not self.parse_request():
+                # An error code has been sent, just exit
+                return
+            mname = 'do_' + self.command
+            if not hasattr(self, mname):
+                self.send_error(501, "Unsupported method (%r)" % self.command)
+                return
+            method = getattr(self, mname)
+            print "before call do_Get"
+            method()
+            # 增加 debug info 及 wfile 判断是否已经 close
+            print "after call do_Get"
+            if not self.wfile.closed:
+                self.wfile.flush()  # actually send the response if not already done.
+            print "after wfile.flush()"
+        except socket.timeout, e:
+            # a read or a write timed out.  Discard this connection
+            self.log_error("Request timed out: %r", e)
+            self.close_connection = 1
+            return
+
+    def do_GET(self):
+        """
+        处理get请求
+        """
+        query = self.path
+        print "query: %s thread=%s" % (query, str(threading.current_thread()))
+
+        ret_str = "<html>" + self.path + "<br>" + str(self.server) + "</html>"
+
+        time.sleep(5)
+
+        try:
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            self.wfile.write(ret_str)
+        except socket.error, e:
+            print "socket.error : Connection broke. Aborting" + str(e)
+            self.wfile._sock.close()
+            self.wfile._sock = None
+            return False
+
+        print "success prod query :%s" % (query)
+        return True
+
+
+# 多线程处理
+class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
+    pass
 
 
 def hex2dec(string_num):
@@ -89,7 +163,7 @@ def sendMessage(message):
             # back_str.append(chr(data_length >> 8))
             # back_str.append(chr(data_length & 0xFF))
         else:
-            print (u'太长了')
+            print (u'Your message is too long, max length is 65535')
         msg = ''
         for c in back_str:
             msg += c
@@ -97,11 +171,11 @@ def sendMessage(message):
         # connection.send(str.encode(str(u"\x00%s\xFF\n\n" % message))) #这个是旧版
         # print (u'send message:' +  message)
         if back_str is not None and len(back_str) > 0:
-            print (back_str)
+            print ('connection.send ' + back_str)
             connection.send(back_str)
 
 
-def deleteconnection(item):
+def delete_connection(item):
     global connection_list
     del connection_list['connection' + item]
 
@@ -173,8 +247,9 @@ class WebSocket(threading.Thread):  # 继承Thread
                     if msg_unicode == 'quit':
                         print (u'Socket%s Logout!' % self.index)
                         now_time = time.strftime('%H:%M:%S', time.localtime(time.time()))
-                        sendMessage(u'%s %s Logout callback: %s' % (now_time, self.remote, self.name + ' Logout'))
-                        deleteconnection(str(self.index))
+                        sendMessage(
+                            u'%s %s Logout callback: %s' % (now_time, self.remote, self.name + ' Logout success'))
+                        delete_connection(str(self.index))
                         self.conn.close()
                         break  # 退出线程
                     else:
