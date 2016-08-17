@@ -60,7 +60,7 @@ def parse_data(msg):
     for d in data:
         raw_str += chr(ord(d) ^ ord(masks[i % 4]))
         i += 1
-    print (u"总长度是：%d" % int(g_code_length))
+    print (u"msg length: %d" % int(g_code_length))
     return raw_str
 
 
@@ -153,7 +153,7 @@ class WebSocket(threading.Thread):  # 继承Thread
                     self.conn.send(str.encode(str(handshake)))
                     self.hands_taken = True
                     print ('Socket %s Handshaken with %s success!' % (self.index, self.remote))
-                    sendMessage(u'Welcome, ' + self.name + ' !')
+                    sendMessage(u'Welcome, ' + self.name + ' !' + '\n\tYou can disconnect with "quit"')
                     self.buffer_utf8 = ""
                     g_code_length = 0
             else:
@@ -173,14 +173,14 @@ class WebSocket(threading.Thread):  # 继承Thread
                     if msg_unicode == 'quit':
                         print (u'Socket%s Logout!' % self.index)
                         now_time = time.strftime('%H:%M:%S', time.localtime(time.time()))
-                        sendMessage(u'%s %s callback: %s' % (now_time, self.remote, self.name + ' Logout'))
+                        sendMessage(u'%s %s Logout callback: %s' % (now_time, self.remote, self.name + ' Logout'))
                         deleteconnection(str(self.index))
                         self.conn.close()
                         break  # 退出线程
                     else:
                         # print (u'Socket%s Got msg:%s from %s!' % (self.index, msg_unicode, self.remote))
                         now_time = time.strftime(u'%H:%M:%S', time.localtime(time.time()))
-                        sendMessage(u'%s %s callback: %s' % (now_time, self.remote, msg_unicode))
+                        sendMessage(u'%s %s msg callback: %s' % (now_time, self.remote, msg_unicode))
                         # 重置buffer和buffer_length
                     self.buffer_utf8 = ""
                     self.buffer = ""
