@@ -32,6 +32,12 @@ def band_app_update():
         return '<h1>only support method GET！</h1>'
 
 
+# just download at /static/<filename>
+@app.route('/<filename>')
+def download(filename):
+    return None
+
+
 @app.route('/', methods=['GET'])
 def index():
     return '<h1>hello ！</h1>'
@@ -40,6 +46,6 @@ def index():
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
-        port=17777,
+        port=17778,
         debug=True
     )
