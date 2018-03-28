@@ -20,6 +20,10 @@ update_data = """
   "force": 0
 }"""
 
+download_html = """
+<h1>this is download page！</h1>
+"""
+
 
 @app.route('/band/v1/app/update', methods=['GET', 'POST'])
 def band_app_update():
@@ -28,6 +32,15 @@ def band_app_update():
         update_json_obj = json.loads(update_data)
         # return json.dumps(update_json_obj["data"])
         return jsonify(update_json_obj)
+    else:
+
+        return '<h1>only support method GET！</h1>'
+
+
+@app.route('/band/app/download', methods=['GET'])
+def band_app_download():
+    if request.method == 'GET':
+        return download_html
     else:
         return '<h1>only support method GET！</h1>'
 
