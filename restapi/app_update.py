@@ -5,6 +5,7 @@ from flask import Flask
 from flask import request
 from flask import jsonify
 from flask import redirect
+from flask import render_template
 
 app = Flask(__name__)
 
@@ -51,9 +52,9 @@ def download(filename):
     return None
 
 
-@app.route('/', methods=['GET'])
+@app.route('/index', methods=["GET"])
 def index():
-    return '<h1>hello ！</h1>'
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
