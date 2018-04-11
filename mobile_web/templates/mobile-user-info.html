@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <link rel="icon" href="/static/ico/favicon.ico">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="/static/js/lodash.core.min.js"></script>
+    <script src="/static/js/string.utils.js"></script>
+    <script type="text/javascript">
+        function fetchNativeUserInfo() {
+            try {
+                //  如果需要 给native数据，在 android.fetchNativeInfo 加入参数即可
+                javascript: android.fetchNativeInfo()
+                {
+                }
+                // android.fetchNativeInfo() 这个就是 native js 函数 android 的 fetchNativeInfo() 返回
+                var userInfo = android.fetchNativeInfo();
+                var users = JSON.parse(userInfo);
+                console.log("userInfo => " + userInfo)
+                var cellPhone = _.forEach(users,
+                    function (val, key) {
+                    console.log("key => " + key)
+                    console.log("val => " + val)
+                    if (key === "cellPhone") {
+                        console.log("cellPhone => " + val)
+                        return val
+                    }
+                })
+                var formatJs = JSON.stringify(userInfo, null, 4)
+                alert("fetchNativeUserInfo get!\n{0}\n{1}\n{2}".format(
+                    formatJs,
+                    users.cellPhone.toString(),
+                    cellPhone
+                    )
+                )
+//                alert("fetchNativeUserInfo get!" + formatJs + "\nCellPhone is => " + users.cellPhone)
+                var htmlJs = formatJs.replace(/\n/g, '<br>').replace(/\s/g, ' ')
+
+            } catch (e) {
+                alert("fetchNativeUserInfo nothing!\nMust in hock APP use this API\n" + e.toString())
+            }
+        }
+    </script>
+
+    <style type="text/css">
+        input[type="button"] {
+            width: 20rem;
+            height: 6rem;
+            margin-top: 1rem;
+            right: 50%;
+            text-align: center;
+            font-size: xx-large;
+            background-color: lightblue;
+        }
+    </style>
+<body>
+<input type="button" value="fetch Native UserInfo"
+       onClick="fetchNativeUserInfo()"/>
+</body>
+</html>
