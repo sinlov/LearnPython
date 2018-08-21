@@ -27,6 +27,14 @@ def api_app_download():
     return render_template('mobile-user-info.html')
 
 
+@app.route('/kmobile/app/download', methods=['GET'])
+def band_app_download():
+    if request.method == 'GET':
+        return render_template('kmobile-app-download.html')
+    else:
+        return '<h1>only support method GET！</h1>'
+
+
 @app.route('/api/v1/app/update', methods=['GET', 'POST'])
 def api_app_update():
     if request.method == 'GET':
