@@ -22,17 +22,15 @@ update_data = """
 }"""
 
 
+# just download at /static/<filename>
+@app.route('/<filename>')
+def download(filename):
+    return None
+
+
 @app.route('/mobile/native/user_info')
 def api_app_download():
     return render_template('mobile-user-info.html')
-
-
-@app.route('/kmobile/app/download', methods=['GET'])
-def band_app_download():
-    if request.method == 'GET':
-        return render_template('kmobile-app-download.html')
-    else:
-        return '<h1>only support method GET！</h1>'
 
 
 @app.route('/api/v1/app/update', methods=['GET', 'POST'])
@@ -45,12 +43,6 @@ def api_app_update():
     else:
 
         return '<h1>only support method GET！</h1>'
-
-
-# just download at /static/<filename>
-@app.route('/<filename>')
-def download(filename):
-    return None
 
 
 @app.route('/index', methods=["GET"])
